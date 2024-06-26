@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { FaHeart } from 'react-icons/fa';
+
 
 function App() {
   const [attendees, setAttendees] = useState([]);
@@ -60,15 +62,17 @@ function App() {
         value={searchTerm}
         onChange={e => setSearchTerm(e.target.value)}
       />
+
       <select
         value={filterCompany}
-        onChange={handleFilterCompany}
-      >
-        <option value="">All Companies...</option>
+        onChange={handleFilterCompany}>
+        <option className="option" value="">All Companies...</option>
         {companyOptions.map((company, index) => (
-          <option key={index} value={company}>{company}</option>
+          <option className="option" key={index} value={company}>{company}</option>
         ))}
       </select>
+
+
       <div className="sort-buttons">
         <button onClick={() => handleSort('name')}>Sort by Name</button>
         <button onClick={() => handleSort('age')}>Sort by Age</button>
@@ -82,6 +86,11 @@ function App() {
           </li>
         ))}
       </ul>
+      <h3>
+         Made with <FaHeart style={{ color: 'red', marginTop: '10px' }}/> by Garvit Dadheech
+      </h3>
+
+
     </div>
   );
 }
