@@ -5,16 +5,26 @@ function App() {
   const [attendees, setAttendees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCompany, setFilterCompany] = useState('');
+  const [theme, setTheme] = useState('dark');
   const [sortKey, setSortKey] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [companyOptions, setCompanyOptions] = useState([]);
 
   useEffect(() => {
     fetch('/attendees.json')
       .then(response => response.json())
-      .then(data => setAttendees(data))
+      .then(data => {
+        setAttendees(data);
+        const companies = data.map(attendee => attendee.company);
+        const uniqueCompanies = [...new Set(companies)];
+        setCompanyOptions(uniqueCompanies);
+      })
       .catch(error => console.error('Error fetching attendees:', error));
   }, []);
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const sortedAttendees = [...attendees].sort((a, b) => {
     if (a[sortKey] < b[sortKey]) return sortOrder === 'asc' ? -1 : 1;
@@ -24,7 +34,7 @@ function App() {
 
   const filteredAttendees = sortedAttendees.filter(attendee => 
     attendee.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    attendee.company.toLowerCase().includes(filterCompany.toLowerCase())
+    (filterCompany === '' || attendee.company === filterCompany)
   );
 
   const handleSort = (key) => {
@@ -36,6 +46,10 @@ function App() {
     }
   };
 
+  const handleFilterCompany = (e) => {
+    setFilterCompany(e.target.value);
+  };
+
   return (
     <div className="App">
       <h1>ReactNexus Attendees</h1>
@@ -45,20 +59,22 @@ function App() {
         value={searchTerm}
         onChange={e => setSearchTerm(e.target.value)}
       />
-      <input
-        type="text"
-        placeholder="Filter by company..."
+      <select
         value={filterCompany}
-        onChange={e => setFilterCompany(e.target.value)}
-      />
+        onChange={handleFilterCompany}
+      >
+        <option value="">Filter by company...</option>
+        {companyOptions.map((company, index) => (
+          <option key={index} value={company}>{company}</option>
+        ))}
+      </select>
       <div className="sort-buttons">
         <button onClick={() => handleSort('name')}>Sort by Name</button>
         <button onClick={() => handleSort('age')}>Sort by Age</button>
-        <button onClick={() => handleSort('company')}>Sort by Company</button>
       </div>
       <ul>
         {filteredAttendees.map((attendee, index) => (
-          <li key={index}>
+          <li key={index} className="enter">
             <h2>{attendee.name}</h2>
             <p>Age: {attendee.age}</p>
             <p>Company: {attendee.company}</p>
