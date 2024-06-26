@@ -52,7 +52,11 @@ function App() {
 
   return (
     <div className="App">
-      <h1>ReactNexus Attendees</h1>
+      <div className='nav-bar'>
+        <dotlottie-player src="https://lottie.host/e91ec6ca-28eb-4ff6-afd6-89609dc8ba8c/VONcoIIQ0r.json" background="transparent" speed="1" style={{ width: '100px', height: '100px' }} loop autoplay></dotlottie-player>
+        <h1>ReactNexus Attendees</h1>
+        <dotlottie-player src="https://lottie.host/e91ec6ca-28eb-4ff6-afd6-89609dc8ba8c/VONcoIIQ0r.json" background="transparent" speed="1" style={{ width: '100px', height: '100px' }} loop autoplay></dotlottie-player>
+      </div>
       <input
         type="text"
         placeholder="Search by name..."
